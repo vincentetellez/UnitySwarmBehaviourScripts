@@ -60,6 +60,7 @@ public class SwarmBasic : MonoBehaviour
 				separation += (dist.sqrMagnitude - preferredSeparation) * dist.normalized;
 			}
 		}
+        separation /= swarmList[swarmNumber].Count;
 	}
 
 	void CalcAlignment() {

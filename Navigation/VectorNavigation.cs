@@ -16,7 +16,10 @@ public class VectorNavigation : MonoBehaviour
 	}
 
 	void Update() {
+        
 		rb.AddForce( thrust * heading );
+
+        ResetHeading();
 	}
 
 	public Vector3 GetHeading() {
