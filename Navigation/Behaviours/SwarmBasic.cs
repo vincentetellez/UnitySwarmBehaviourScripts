@@ -11,6 +11,11 @@ public class SwarmBasic : MonoBehaviour
 
 	public int swarmNumber = 0;				           // Which swarm in the swarm list this entity belongs to
 
+    public bool localizedBehaviour = false;             // Controls if behaviour should be influenced by entire swarm or just nearby neighbors
+
+    public const int NUMNEIGHBORS = 5;
+    private GameObject[] neighbors;
+
 	private Vector3 separation;
 	private Vector3 alignment;
 	private Vector3 cohesion;
@@ -39,11 +44,17 @@ public class SwarmBasic : MonoBehaviour
         }
         swarmList[swarmNumber].Add( this.gameObject );
 
+        neighbors = new GameObject[NUMNEIGHBORS];
 	}
 
 	void Update() {
 
-		CalcSeparation();
+        if ( localizedBehaviour ) {
+            CalcSeparation2();
+        }
+        else {
+		    CalcSeparation();
+        }
 		CalcAlignment();
 		vn.SetHeading( separationWeight * separation + alignmentWeight * alignment );
 	}
@@ -55,12 +66,29 @@ public class SwarmBasic : MonoBehaviour
 		separation = Vector3.zero;
 		for ( int i = 0; i < swarmList[swarmNumber].Count; i++ ) {
 			neighbor = swarmList[swarmNumber][i];
-			if ( neighbor != this ) {
+			if ( neighbor != this.gameObject ) {
 				dist = neighbor.transform.position - transform.position;
 				separation += (dist.sqrMagnitude - preferredSeparation) * dist.normalized;
 			}
 		}
         separation /= swarmList[swarmNumber].Count;
+	}
+
+    void CalcSeparation2() {
+
+		// Calculates the separation between closest swarm neighbors so that a proper distance can be maintained. This method takes care of separation and cohesion at the same time
+
+        QueryNeighbors();
+
+		separation = Vector3.zero;
+		for ( int i = 0; i < neighbors.Length; i++ ) {
+			neighbor = neighbors[i];
+			if ( neighbor != this.gameObject ) {
+				dist = neighbor.transform.position - transform.position;
+				separation += (dist.sqrMagnitude - preferredSeparation) * dist.normalized;
+			}
+		}
+        separation /= neighbors.Length;
 	}
 
 	void CalcAlignment() {
@@ -70,7 +98,7 @@ public class SwarmBasic : MonoBehaviour
 		alignment = Vector3.zero;
 		for ( int i = 0; i < swarmList[swarmNumber].Count; i++ ) {
 			neighbor = swarmList[swarmNumber][i];
-			if ( neighbor != this ) {
+			if ( neighbor != this.gameObject ) {
 				alignment += neighbor.transform.forward;
 			}
 		}
@@ -81,4 +109,26 @@ public class SwarmBasic : MonoBehaviour
 
 		cohesion = Vector3.zero;
 	}
+
+    void QueryNeighbors() {
+        for ( int i = 0; i < neighbors.Length; i++ ) {
+            neighbors[i] = null;
+        }
+        for ( int i = 0; i < swarmList[swarmNumber].Count; i++ ) {
+            neighbor = swarmList[swarmNumber][i];
+            if ( neighbor != this.gameObject ) {
+                dist = neighbor.transform.position - transform.position;
+                for ( int j = 0; j < NUMNEIGHBORS; j++ ) {
+                    if ( neighbors[j] == null ) {
+                        neighbors[j] = neighbor;
+                        break;
+                    } else if ( dist.sqrMagnitude < (neighbors[j].transform.position - transform.position).sqrMagnitude ) {
+                        GameObject temp = neighbors[j];
+                        neighbors[j] = neighbor;
+                        neighbor = temp;
+                    }
+                }
+            }
+        }
+    }
 }
