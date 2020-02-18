@@ -9,7 +9,7 @@ public class SeekConstant : MonoBehaviour
 
     public float weight = 1f;
 
-    public GameObject objective;
+    public GameObject objectives[];
 
     private Vector3 dist;
 
@@ -22,7 +22,9 @@ public class SeekConstant : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        dist = objective.transform.position - transform.position;
-        vn.AddHeading( weight * dist.normalized );
+        for ( int i = 0; i < objectives.Length; i++ ) {
+            dist = objectives[i].transform.position - transform.position;
+            vn.AddHeading( weight * dist.normalized );
+        }
     }
 }
