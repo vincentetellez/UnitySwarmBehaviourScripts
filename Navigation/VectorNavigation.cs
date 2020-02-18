@@ -4,19 +4,20 @@ using UnityEngine;
 
 public class VectorNavigation : MonoBehaviour
 {
+
     public Vector3 heading;
 
-	private Rigidbody rb;
+	protected Rigidbody rb;
 
-	private float thrust = 1f;
+	public float thrust = 1f;
 
-	void Start() {
+	public virtual void Start() {
 		heading = Vector3.zero;
 		rb = GetComponentInParent<Rigidbody>();
 	}
 
-	void Update() {
-        
+	public virtual void FixedUpdate() {
+
 		rb.AddForce( thrust * heading );
 
         ResetHeading();

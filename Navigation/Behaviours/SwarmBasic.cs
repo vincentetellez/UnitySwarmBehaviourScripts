@@ -16,13 +16,15 @@ public class SwarmBasic : MonoBehaviour
     public const int NUMNEIGHBORS = 5;
     private GameObject[] neighbors;
 
+    public float queryChance = 0.1f;                    // Percent chance per second of querying neighbors
+
 	private Vector3 separation;
 	private Vector3 alignment;
-	private Vector3 cohesion;
+	//private Vector3 cohesion;
 
 	public float separationWeight = 1f;
 	public float alignmentWeight = 1f;
-	public float cohesionWeight = 1f;
+	//public float cohesionWeight = 1f;
 
 	public float preferredSeparation = 25f;			   // Calculations are done using square magnitudes, not magnitudes
 
@@ -50,18 +52,27 @@ public class SwarmBasic : MonoBehaviour
 	void Update() {
 
         if ( localizedBehaviour ) {
-            CalcSeparation2();
+            if ( Random.value < queryChance * Time.deltaTime ) {
+                QueryNeighbors();
+            }
+        }
+
+        if ( localizedBehaviour ) {
+            CalcLocalSeparation();
+            CalcLocalAlignment();
+            //CalcLocalCohesion();
         }
         else {
 		    CalcSeparation();
+            CalcAlignment();
+            //CalcCohesion();
         }
-		CalcAlignment();
 		vn.SetHeading( separationWeight * separation + alignmentWeight * alignment );
 	}
 
 	void CalcSeparation() {
 
-		// Calculates the separation between all swarm neighbors so that a proper distance can be maintained. This method takes care of separation and cohesion at the same time
+		// Calculates the separation between all swarm neighbors so that a proper distance can be maintained. This method accounts for separation and cohesion in a single function.
 
 		separation = Vector3.zero;
 		for ( int i = 0; i < swarmList[swarmNumber].Count; i++ ) {
@@ -74,16 +85,14 @@ public class SwarmBasic : MonoBehaviour
         separation /= swarmList[swarmNumber].Count;
 	}
 
-    void CalcSeparation2() {
+    void CalcLocalSeparation() {
 
-		// Calculates the separation between closest swarm neighbors so that a proper distance can be maintained. This method takes care of separation and cohesion at the same time
-
-        QueryNeighbors();
+		// Calculates the separation between closest swarm neighbors so that a proper distance can be maintained. This method accounts for separation and cohesion in a single function.
 
 		separation = Vector3.zero;
 		for ( int i = 0; i < neighbors.Length; i++ ) {
 			neighbor = neighbors[i];
-			if ( neighbor != this.gameObject ) {
+			if ( neighbor != null && neighbor != this.gameObject ) {
 				dist = neighbor.transform.position - transform.position;
 				separation += (dist.sqrMagnitude - preferredSeparation) * dist.normalized;
 			}
@@ -105,10 +114,35 @@ public class SwarmBasic : MonoBehaviour
 		alignment /= swarmList[swarmNumber].Count;
 	}
 
-	void CalcCohesion() {
+    void CalcLocalAlignment() {
+
+        // Calculates the heading of all swarm neighbors to align with the swarms average direction
+
+		alignment = Vector3.zero;
+		for ( int i = 0; i < neighbors.Length; i++ ) {
+			neighbor = neighbors[i];
+			if ( neighbor != null && neighbor != this.gameObject ) {
+				alignment += neighbor.transform.forward;
+			}
+		}
+		alignment /= swarmList[swarmNumber].Count;
+    }
+
+	/*void CalcLocalCohesion() {
+
+        // Calculates the separation between closest swarm neighbors so that a proper distance can be maintained. Original method accounted for separation and cohesion, but they have been separated to allow for different weights.
 
 		cohesion = Vector3.zero;
-	}
+		for ( int i = 0; i < neighbors.Length; i++ ) {
+			neighbor = neighbors[i];
+			if ( neighbor != null && neighbor != this.gameObject ) {
+				dist = neighbor.transform.position - transform.position;
+				//separation += (dist.sqrMagnitude - preferredSeparation) * dist.normalized;
+                cohesion += dist;
+			}
+		}
+        separation /= neighbors.Length;
+	}*/
 
     void QueryNeighbors() {
         for ( int i = 0; i < neighbors.Length; i++ ) {
