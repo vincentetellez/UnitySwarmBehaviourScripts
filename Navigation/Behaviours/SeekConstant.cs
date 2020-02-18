@@ -9,7 +9,7 @@ public class SeekConstant : MonoBehaviour
 
     public float weight = 1f;
 
-    public GameObject objectives[];
+    public GameObject[] objectives;
 
     private Vector3 dist;
 
