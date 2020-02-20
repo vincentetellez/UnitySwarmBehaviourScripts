@@ -19,6 +19,7 @@ public class AvoidExponential : MonoBehaviour
 
     private Vector3 dist;
     private float hiddenWeight;
+    private float divZeroAccuracy = 0.001f;
 
     // Start is called before the first frame update
     void Start()
@@ -36,7 +37,7 @@ public class AvoidExponential : MonoBehaviour
         }
     
         dist = objective.transform.position - transform.position;
-        hiddenWeight = -1 / Mathf.Max( dist.sqrMagnitude, 0.001f );
+        hiddenWeight = -1 / Mathf.Max( dist.sqrMagnitude, divZeroAccuracy );
         vn.AddHeading( weight * hiddenWeight * dist.normalized );
     }
     
