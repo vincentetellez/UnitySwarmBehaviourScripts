@@ -3,6 +3,9 @@ This project contains C# scripts for the Unity game engine which simulate swarm 
 
 Currently implemented behaviours include:
 * SwarmBasic.cs - Implements basic swarm behaviour, with support for multiple swarms. Agents take into acount all members of their swarm and adhere to the three basic rules of boids: separation, alignment, and cohesion.
-* SeekConstant.cs - Seek a specific object with a constant weight, regardless of distance.
-* AvoidExponential.cs - Avoid a specific object with exponentially increasing weight based on how close the agent is to the object.
+* SeekConstant.cs - Seek an object or array of objects with a constant weight, regardless of distance. An optional toggle can be enabled so that the agent automatically updates the array with objects of a specified tag.
+* SeekExponential.cs - Seek an object or array of objects with a weight that grows exponentially the closer the agent is, regardless of distance. An optional toggle can be enabled so that the agent automatically updates the array with objects of a specified tag.
+* SeekCurve.cs - Seek an object or array of objects with a weight specified by a user-defined function of distance. An optional toggle can be enabled so that the agent automatically updates the array with objects of a specified tag.
+* AvoidExponential.cs - Avoid an object or array of objects with exponentially increasing weight based on how close the agent is to the object.
+* AvoidCurve.cs - Avoid an object or array of objects with exponentially increasing weight based on a user-defined function of distance.
 * Orbit.cs - Approach a particular distance from a specific object, and orbit around that object along some orbital plane.
