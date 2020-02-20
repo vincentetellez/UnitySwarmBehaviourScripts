@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SeekConstant : MonoBehaviour
+public class SeekCurve : MonoBehaviour
 {
 
     private VectorNavigation vn;
