@@ -18,6 +18,8 @@ public class SeekConstant : MonoBehaviour
     public GameObject[] objectives;
 
     private Vector3 dist;
+    private float hiddenWeight;
+    private float divZeroAccuracy = 0.001f;
 
     // Start is called before the first frame update
 
@@ -38,7 +40,8 @@ public class SeekConstant : MonoBehaviour
 
         for ( int i = 0; i < objectives.Length; i++ ) {
             dist = objectives[i].transform.position - transform.position;
-            vn.AddHeading( weight * dist.sqrMagnitude * dist.normalized / objectives.Length );
+            hiddenWeight = 1 / Mathf.Max( dist.sqrMagnitude, divZeroAccuracy );
+            vn.AddHeading( weight * hiddenWeight * dist.normalized / objectives.Length );
         }
     }
     
