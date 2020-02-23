@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class AvoidExponential : MonoBehaviour
+public class AvoidExponential : AIBehaviour
 {
 
     private VectorNavigation vn;
 
     public float weight = 1f;
-    
+
     public bool senseObjectives = false;
 
     public string seekTag;
@@ -35,15 +35,17 @@ public class AvoidExponential : MonoBehaviour
                 QueryEnvironment();
             }
         }
-    
-        dist = objective.transform.position - transform.position;
-        hiddenWeight = -1 / Mathf.Max( dist.sqrMagnitude, divZeroAccuracy );
-        vn.AddHeading( weight * hiddenWeight * dist.normalized );
+
+        for ( int i = 0; i < objectives.Length; i++ ) {
+            dist = objectives[i].transform.position - transform.position;
+            hiddenWeight = -1 / Mathf.Max( dist.sqrMagnitude, divZeroAccuracy );
+            vn.AddHeading( weight * hiddenWeight * dist.normalized / objectives.Length );
+        }
     }
-    
+
     void QueryEnvironment() {
         try {
-            objectives = GameObject.FindObjectsWithTag( seekTag );
+            objectives = GameObject.FindGameObjectsWithTag( seekTag );
         }
         catch ( UnityException e ) {
             Debug.Log( e );

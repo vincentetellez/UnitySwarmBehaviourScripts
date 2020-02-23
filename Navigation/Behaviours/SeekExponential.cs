@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SeekConstant : MonoBehaviour
+public class SeekExponential : AIBehaviour
 {
 
     private VectorNavigation vn;
@@ -44,10 +44,10 @@ public class SeekConstant : MonoBehaviour
             vn.AddHeading( weight * hiddenWeight * dist.normalized / objectives.Length );
         }
     }
-    
+
     void QueryEnvironment() {
         try {
-            objectives = GameObject.FindObjectsWithTag( seekTag );
+            objectives = GameObject.FindGameObjectsWithTag( seekTag );
         }
         catch ( UnityException e ) {
             Debug.Log( e );

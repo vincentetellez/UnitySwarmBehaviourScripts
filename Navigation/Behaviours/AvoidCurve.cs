@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class AvoidCurve : MonoBehaviour
+public class AvoidCurve : AIBehaviour
 {
 
     private VectorNavigation vn;
@@ -46,7 +46,7 @@ public class AvoidCurve : MonoBehaviour
     
     void QueryEnvironment() {
         try {
-            objectives = GameObject.FindObjectsWithTag( seekTag );
+            objectives = GameObject.FindGameObjectsWithTag( seekTag );
         }
         catch ( UnityException e ) {
             Debug.Log( e );

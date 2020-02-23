@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SwarmBasic : MonoBehaviour
+public class SwarmBasic : AIBehaviour
 {
 
     private VectorNavigation vn;
@@ -67,7 +67,7 @@ public class SwarmBasic : MonoBehaviour
             CalcAlignment();
             //CalcCohesion();
         }
-		vn.SetHeading( separationWeight * separation + alignmentWeight * alignment );
+		vn.AddHeading( separationWeight * separation + alignmentWeight * alignment );
 	}
 
 	void CalcSeparation() {

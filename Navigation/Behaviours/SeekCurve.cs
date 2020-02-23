@@ -2,13 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SeekCurve : MonoBehaviour
+public class SeekCurve : AIBehaviour
 {
 
     private VectorNavigation vn;
 
     public float weight = 1f;
-    
+
     public AnimationCurve curve;
 
     public bool senseObjectives = false;
@@ -43,10 +43,10 @@ public class SeekCurve : MonoBehaviour
             vn.AddHeading( weight * curve.Evaluate( dist.magnitude ) * dist.normalized / objectives.Length );
         }
     }
-    
+
     void QueryEnvironment() {
         try {
-            objectives = GameObject.FindObjectsWithTag( seekTag );
+            objectives = GameObject.FindGameObjectsWithTag( seekTag );
         }
         catch ( UnityException e ) {
             Debug.Log( e );

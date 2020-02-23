@@ -2,17 +2,17 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SeekConstant : MonoBehaviour
+public class SeekConstant : AIBehaviour
 {
 
     private VectorNavigation vn;
 
     public float weight = 1f;
-    
+
     public bool senseObjectives = false;
-    
+
     public string seekTag;
-    
+
     public float senseFrequency = 0.1f;
 
     public GameObject[] objectives;
@@ -33,16 +33,16 @@ public class SeekConstant : MonoBehaviour
                 QueryEnvironment();
             }
         }
-        
+
         for ( int i = 0; i < objectives.Length; i++ ) {
             dist = objectives[i].transform.position - transform.position;
             vn.AddHeading( weight * dist.normalized / objectives.Length );
         }
     }
-    
+
     void QueryEnvironment() {
         try {
-            objectives = GameObject.FindObjectsWithTag( seekTag );
+            objectives = GameObject.FindGameObjectsWithTag( seekTag );
         }
         catch ( UnityException e ) {
             Debug.Log( e );

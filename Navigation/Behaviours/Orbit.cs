@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Orbit : MonoBehaviour
+public class Orbit : AIBehaviour
 {
 
     private VectorNavigation vn;
